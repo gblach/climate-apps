@@ -1,0 +1,9 @@
+# Typical usage:  climate run shellcheck script.sh
+
+[app]
+name = "shellcheck"
+description = "Shell script static analysis"
+license = "GPL-3.0-or-later"
+
+[image]
+reference = "docker.io/koalaman/shellcheck:stable"

@@ -1,0 +1,9 @@
+# Typical usage:  climate run yamllint .
+
+[app]
+name = "yamllint"
+description = "YAML linter"
+license = "GPL-3.0-or-later"
+
+[image]
+reference = "docker.io/cytopia/yamllint:latest"

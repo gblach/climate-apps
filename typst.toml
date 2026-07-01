@@ -1,0 +1,9 @@
+# Typical usage:  climate run typst compile doc.typ
+
+[app]
+name = "typst"
+description = "Markup-based document/PDF compiler"
+license = "Apache-2.0"
+
+[image]
+reference = "ghcr.io/typst/typst:latest"

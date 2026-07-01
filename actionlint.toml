@@ -1,0 +1,9 @@
+# Typical usage:  climate run actionlint
+
+[app]
+name = "actionlint"
+description = "GitHub Actions workflow linter"
+license = "MIT"
+
+[image]
+reference = "docker.io/rhysd/actionlint:latest"

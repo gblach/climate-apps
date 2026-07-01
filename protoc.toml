@@ -1,0 +1,9 @@
+# Typical usage:  climate run protoc -d . -o gen -l python
+
+[app]
+name = "protoc"
+description = "Protocol Buffers compiler"
+license = "BSD-3-Clause"
+
+[image]
+reference = "docker.io/namely/protoc-all:latest"

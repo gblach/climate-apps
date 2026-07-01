@@ -1,0 +1,9 @@
+# Typical usage:  climate run butane --pretty --strict < config.bu > config.ign
+
+[app]
+name = "butane"
+description = "Butane to Ignition config transpiler"
+license = "Apache-2.0"
+
+[image]
+reference = "quay.io/coreos/butane:release"

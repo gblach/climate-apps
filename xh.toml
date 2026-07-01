@@ -1,0 +1,13 @@
+# Typical usage:  climate run xh GET httpbin.org/get
+#                 climate run xh POST httpbin.org/post name=value
+
+[app]
+name = "xh"
+description = "Friendly and fast HTTP request tool"
+license = "MIT"
+
+[image]
+reference = "docker.io/westonsteimel/xh:latest"
+
+[run]
+network = "full"

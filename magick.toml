@@ -1,0 +1,12 @@
+# Typical usage:  climate run magick in.png -resize 50% out.png
+
+[app]
+name = "magick"
+description = "ImageMagick image manipulation"
+license = "ImageMagick"
+
+[image]
+reference = "docker.io/dpokidov/imagemagick:latest"
+
+[run]
+entrypoint = "magick"

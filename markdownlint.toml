@@ -1,0 +1,9 @@
+# Typical usage:  climate run markdownlint README.md
+
+[app]
+name = "markdownlint"
+description = "Markdown linter"
+license = "MIT"
+
+[image]
+reference = "ghcr.io/igorshubovych/markdownlint-cli:latest"

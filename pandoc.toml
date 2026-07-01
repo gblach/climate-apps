@@ -1,0 +1,9 @@
+# Typical usage:  climate run pandoc in.md -o out.pdf
+
+[app]
+name = "pandoc"
+description = "Universal document converter"
+license = "GPL-2.0-or-later"
+
+[image]
+reference = "docker.io/pandoc/latex:latest"

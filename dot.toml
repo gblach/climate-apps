@@ -1,0 +1,12 @@
+# Typical usage:  climate run dot -Tpng in.dot -o out.png
+
+[app]
+name = "dot"
+description = "Graphviz graph/diagram rendering"
+license = "EPL-1.0"
+
+[image]
+reference = "docker.io/nshine/dot:latest"
+
+[run]
+entrypoint = "dot"

@@ -1,0 +1,9 @@
+# Typical usage:  climate run sqlfluff lint model.sql
+
+[app]
+name = "sqlfluff"
+description = "SQL linter and formatter"
+license = "MIT"
+
+[image]
+reference = "docker.io/sqlfluff/sqlfluff:latest"

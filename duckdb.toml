@@ -1,0 +1,13 @@
+# Typical usage:  climate run duckdb data.duckdb
+#                 climate run duckdb -c "SELECT * FROM 'data.csv'"
+
+[app]
+name = "duckdb"
+description = "In-process analytical SQL database"
+license = "MIT"
+
+[image]
+reference = "docker.io/duckdb/duckdb:latest"
+
+[run]
+entrypoint = "duckdb"

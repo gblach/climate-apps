@@ -1,0 +1,13 @@
+# Typical usage:  climate run hugo  (or: climate run hugo server)
+
+[app]
+name = "hugo"
+description = "Static site generator"
+license = "Apache-2.0"
+
+[image]
+reference = "docker.io/hugomods/hugo:latest"
+
+[run]
+# Needed for module/theme fetches and `hugo server`.
+network = "full"

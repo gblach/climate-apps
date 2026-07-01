@@ -1,0 +1,14 @@
+# Typical usage:  climate run cargo build
+
+[app]
+name = "cargo"
+description = "Rust package manager and build tool"
+license = "MIT OR Apache-2.0"
+
+[image]
+reference = "docker.io/library/rust:latest"
+
+[run]
+entrypoint = "cargo"
+# Fetch crates from crates.io.
+network = "full"

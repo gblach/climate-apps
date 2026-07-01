@@ -1,0 +1,14 @@
+# Typical usage:  climate run flyway migrate
+
+[app]
+name = "flyway"
+description = "Database migrations"
+license = "Apache-2.0"
+
+[image]
+reference = "docker.io/flyway/flyway:latest"
+
+[run]
+env = ["FLYWAY_LOCATIONS", "FLYWAY_PASSWORD", "FLYWAY_URL", "FLYWAY_USER"]
+# Talk to a database on the host.
+network = "full"

@@ -1,0 +1,16 @@
+# Typical usage:  climate run caddy fmt / validate
+#                 climate run caddy file-server --listen :8080
+
+[app]
+name = "caddy"
+description = "Web server / reverse proxy"
+license = "Apache-2.0"
+
+[image]
+reference = "docker.io/library/caddy:latest"
+
+[run]
+entrypoint = "caddy"
+# Server modes (run, file-server, reverse-proxy) need host ports;
+# one-shot subcommands (fmt, validate) work fine without it.
+network = "full"

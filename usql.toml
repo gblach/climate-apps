@@ -1,0 +1,14 @@
+# Typical usage:  climate run usql postgres://user@localhost/db
+
+[app]
+name = "usql"
+description = "Universal command-line SQL client"
+license = "MIT"
+
+[image]
+reference = "docker.io/usql/usql:latest"
+
+[run]
+# Interactive REPL talking to a database on the host.
+cwd = false
+network = "full"

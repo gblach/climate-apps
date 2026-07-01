@@ -1,0 +1,9 @@
+# Typical usage:  climate run gitleaks detect
+
+[app]
+name = "gitleaks"
+description = "Secret detection in git repos"
+license = "MIT"
+
+[image]
+reference = "ghcr.io/gitleaks/gitleaks:latest"

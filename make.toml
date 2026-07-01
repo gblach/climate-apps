@@ -1,0 +1,12 @@
+# Typical usage:  climate run make
+
+[app]
+name = "make"
+description = "GNU make build tool"
+license = "GPL-3.0-or-later"
+
+[image]
+reference = "docker.io/library/gcc:latest"
+
+[run]
+entrypoint = "make"

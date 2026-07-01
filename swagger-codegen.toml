@@ -1,0 +1,9 @@
+# Typical usage:  climate run swagger-codegen generate -i spec.yaml -l go -o out
+
+[app]
+name = "swagger-codegen"
+description = "OpenAPI client/server generator"
+license = "Apache-2.0"
+
+[image]
+reference = "docker.io/swaggerapi/swagger-codegen-cli-v3:latest"

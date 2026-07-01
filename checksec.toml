@@ -1,0 +1,12 @@
+# Typical usage:  climate run checksec file ./binary
+
+[app]
+name = "checksec"
+description = "Binary security feature checker"
+license = "BSD-3-Clause"
+
+[image]
+reference = "docker.io/slimm609/checksec:latest"
+
+[run]
+entrypoint = "checksec"

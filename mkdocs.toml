@@ -1,0 +1,13 @@
+# Typical usage:  climate run mkdocs build  (or: climate run mkdocs serve)
+
+[app]
+name = "mkdocs"
+description = "Documentation site generator"
+license = "MIT"
+
+[image]
+reference = "docker.io/squidfunk/mkdocs-material:latest"
+
+[run]
+# Needed for `mkdocs serve` and plugin/theme fetches.
+network = "full"

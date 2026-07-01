@@ -1,0 +1,14 @@
+# Typical usage:  climate run dbmate up
+
+[app]
+name = "dbmate"
+description = "Database migration tool"
+license = "MIT"
+
+[image]
+reference = "ghcr.io/amacneil/dbmate:latest"
+
+[run]
+# Talk to a database on the host (e.g. a local postgres).
+env = ["DATABASE_URL"]
+network = "full"
