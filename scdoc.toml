@@ -1,0 +1,12 @@
+# Typical usage:  climate run scdoc < page.1.scd > page.1
+
+[app]
+name = "scdoc"
+description = "Man page generator for the scdoc markup language"
+license = "MIT"
+
+[image]
+reference = "nixery.dev/scdoc:latest"
+
+[run]
+entrypoint = "/bin/scdoc"
