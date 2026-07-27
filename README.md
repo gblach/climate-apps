@@ -11,7 +11,7 @@ Only `[app]` and `[image]` are required.
 | Key           | Type   | Default  | Description                              |
 | ------------- | ------ | -------- | ---------------------------------------- |
 | `name`        | string | required | App name; must match the file stem.      |
-| `description` | string | `""`     | One-line description for `climate list`. |
+| `description` | string | required | One-line description for `climate list`. |
 | `license`     | string | required | SPDX license identifier of the main app. |
 
 ## `[image]`
