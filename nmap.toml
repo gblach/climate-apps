@@ -1,0 +1,15 @@
+# Typical usage:  climate run nmap -sn 192.168.1.0/24
+
+[app]
+name = "nmap"
+description = "Network scanner"
+license = "NPSL"
+
+[image]
+reference = "docker.io/instrumentisto/nmap:latest"
+
+[run]
+# Raw sockets are unavailable in the rootless container, so force connect scans.
+args = ["--unprivileged"]
+# Scan from the host's network.
+network = "full"
