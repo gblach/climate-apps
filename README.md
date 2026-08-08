@@ -37,11 +37,48 @@ directory is mounted in so the tool behaves like a native one.
 | `args`        | list of string | `[]`          | Default arguments, placed before user-supplied arguments.                                                        |
 | `env`         | list of string | `[]`          | Environment entries: `"NAME"` passes a host variable through, `"NAME=VALUE"` sets it explicitly.                 |
 | `cwd`         | bool           | `true`        | Bind-mount the current working directory at the same path; `false` mounts nothing.                               |
+| `mount`       | list of string | `[]`          | Extra host paths to share, on top of the working directory; see below.                                           |
 | `network`     | enum           | `"none"`      | Network access: `"full"` (host network), `"none"` (isolated, no connectivity), or `"localhost"` (loopback only). |
 
 `entrypoint` accepts a single string or a list of strings: a string overrides the entrypoint
 verbatim (run directly), while a list is encoded as a JSON array,
 e.g. `entrypoint = ["/bin/sh", "-c", "ffmpeg -version"]`.
+
+`mount` shares further host paths with the container, mainly a tool's own config directory or file,
+so its settings survive between runs. Each entry is written the way `docker` and `podman` spell
+a share, as up to three `:` separated fields `<host path>:<path inside the container>:<ro|rw>`:
+
+```toml
+[run]
+env = ["HOME"]
+mount = [
+    "~/.config/gh",                       # shared read-write under its own name
+    "/etc/ssl/certs:ro",                  # shared read-only under its own name
+    "~/.config/gh:/root/.config/gh",      # shared read-write, at another path inside
+    "/etc/ssl/certs:/certs:ro",           # shared read-only, at another path inside
+]
+```
+
+Leaving the middle field out keeps the path's own name inside the container, which needs the tool
+to look for it there - passing the host's `HOME` through with `env = ["HOME"]` usually does it.
+Name the path inside explicitly when the image runs the tool with a different home directory.
+
+Shares are read-write unless the flag says `ro`. A leading `~` is the user's home directory; every
+other path must be absolute. Files can be shared as well as directories.
+
+A path that exists is shared as whatever it is. A missing one is created, so a tool can be given
+its config before its first run - as a directory if the entry ends with `/`, as an empty file
+otherwise:
+
+```toml
+mount = [
+    "~/.config/gh/",     # created as a directory
+    "~/.gitconfig",      # created as an empty file
+]
+```
+
+A missing path shared read-only is an error instead, as sharing an empty one is never what
+the definition meant.
 
 ## Example
 
