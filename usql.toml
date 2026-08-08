@@ -10,5 +10,5 @@ reference = "docker.io/usql/usql:latest"
 
 [run]
 # Interactive REPL talking to a database on the host.
-cwd = false
+mount-cwd = false
 network = "full"

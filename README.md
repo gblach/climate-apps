@@ -36,7 +36,7 @@ directory is mounted in so the tool behaves like a native one.
 | `entrypoint`  | string or list | image default | Override the image entrypoint.                                                                                   |
 | `args`        | list of string | `[]`          | Default arguments, placed before user-supplied arguments.                                                        |
 | `env`         | list of string | `[]`          | Environment entries: `"NAME"` passes a host variable through, `"NAME=VALUE"` sets it explicitly.                 |
-| `cwd`         | bool           | `true`        | Bind-mount the current working directory at the same path; `false` mounts nothing.                               |
+| `mount-cwd`   | bool           | `true`        | Bind-mount the current working directory at the same path; `false` mounts nothing.                               |
 | `mount`       | list of string | `[]`          | Extra host paths to share, on top of the working directory; see below.                                           |
 | `network`     | enum           | `"none"`      | Network access: `"full"` (host network), `"none"` (isolated, no connectivity), or `"localhost"` (loopback only). |
 
