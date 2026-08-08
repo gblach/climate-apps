@@ -1,0 +1,17 @@
+# Typical usage:  climate run fish
+
+[app]
+name = "fish"
+description = "Friendly interactive shell"
+license = "GPL-2.0-only"
+
+[image]
+reference = "docker.io/dideler/fish-shell:latest"
+
+[run]
+entrypoint = "fish"
+mount = [
+    "~/.config/fish:/root/.config/fish",
+    "~/.local/share/fish:/root/.local/share/fish",
+    "~/.cache/fish:/root/.cache/fish",
+]
