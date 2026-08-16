@@ -67,13 +67,15 @@ Shares are read-write unless the flag says `ro`. A leading `~` is the user's hom
 other path must be absolute. Files can be shared as well as directories.
 
 A path that exists is shared as whatever it is. A missing one is created, so a tool can be given
-its config before its first run - as a directory if the entry ends with `/`, as an empty file
-otherwise:
+its config before its first run - as a directory if the host path ends with `/`, as an empty file
+otherwise. The `/` belongs to the host path, so it stays where it is when a path inside
+the container follows:
 
 ```toml
 mount = [
-    "~/.config/gh/",     # created as a directory
-    "~/.gitconfig",      # created as an empty file
+    "~/.config/gh/",                   # created as a directory
+    "~/.gitconfig",                    # created as an empty file
+    "~/.config/gh/:/root/.config/gh",  # created as a directory, shared at another path inside
 ]
 ```
 
