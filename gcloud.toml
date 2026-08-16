@@ -1,0 +1,15 @@
+# Typical usage:  climate run gcloud compute instances list
+
+[app]
+name = "gcloud"
+description = "Google Cloud CLI"
+license = "Apache-2.0"
+
+[image]
+reference = "gcr.io/google.com/cloudsdktool/google-cloud-cli:latest"
+
+[run]
+entrypoint = "gcloud"
+network = "full"
+# Credentials, configurations and logs; the image runs the tool as root.
+mount = ["~/.config/gcloud/:/root/.config/gcloud"]
