@@ -1,0 +1,15 @@
+# Typical usage:  climate run az login --use-device-code
+
+[app]
+name = "az"
+description = "Azure command-line interface"
+license = "MIT"
+
+[image]
+reference = "mcr.microsoft.com/azure-cli:latest"
+
+[run]
+entrypoint = "az"
+network = "full"
+# Sign-in tokens, subscriptions and settings; the image runs the tool as root.
+mount = ["~/.azure/:/root/.azure"]
