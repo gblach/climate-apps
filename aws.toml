@@ -1,0 +1,23 @@
+# Typical usage:  climate run aws s3 ls
+
+[app]
+name = "aws"
+description = "AWS command-line interface"
+license = "Apache-2.0"
+
+[image]
+reference = "docker.io/amazon/aws-cli:latest"
+
+[run]
+entrypoint = "aws"
+network = "full"
+env = [
+    "AWS_ACCESS_KEY_ID",
+    "AWS_DEFAULT_REGION",
+    "AWS_PROFILE",
+    "AWS_REGION",
+    "AWS_SECRET_ACCESS_KEY",
+    "AWS_SESSION_TOKEN",
+]
+# Credentials, profiles and the SSO token cache; the image runs the tool as root.
+mount = ["~/.aws/:/root/.aws"]
