@@ -1,0 +1,16 @@
+# Typical usage:  climate run doctl account get
+
+[app]
+name = "doctl"
+description = "DigitalOcean CLI"
+license = "Apache-2.0"
+
+[image]
+reference = "docker.io/digitalocean/doctl:latest"
+
+[run]
+entrypoint = "/app/doctl"
+network = "full"
+env = ["DIGITALOCEAN_ACCESS_TOKEN"]
+# Access tokens and contexts written by `doctl auth`; the image runs the tool as root.
+mount = ["~/.config/doctl/:/root/.config/doctl"]
