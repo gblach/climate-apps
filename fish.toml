@@ -11,7 +11,7 @@ reference = "docker.io/dideler/fish-shell:latest"
 [run]
 entrypoint = "fish"
 mount = [
-    "~/.config/fish:/root/.config/fish",
-    "~/.local/share/fish:/root/.local/share/fish",
-    "~/.cache/fish:/root/.cache/fish",
+    "~/.config/fish/:/root/.config/fish",
+    "~/.local/share/fish/:/root/.local/share/fish",
+    "~/.cache/fish/:/root/.cache/fish",
 ]
