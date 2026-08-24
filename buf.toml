@@ -1,0 +1,14 @@
+# Typical usage:  climate run buf lint / generate
+
+[app]
+name = "buf"
+description = "Protobuf linting/codegen"
+license = "Apache-2.0"
+
+[image]
+reference = "docker.io/bufbuild/buf:latest"
+
+[run]
+# buf writes a cache before doing anything and the container root is read-only, so this is
+# needed even offline. Reaching the Buf Schema Registry also needs network = "full".
+mount = ["~/.cache/buf/:/root/.cache/buf"]
