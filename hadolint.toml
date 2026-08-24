@@ -1,0 +1,15 @@
+# Typical usage:  climate run hadolint Dockerfile
+
+[app]
+name = "hadolint"
+description = "Dockerfile linter"
+license = "GPL-3.0-only"
+
+[image]
+reference = "ghcr.io/hadolint/hadolint:latest"
+
+[run]
+entrypoint = "/bin/hadolint"
+# The image is FROM scratch, with no /etc/passwd to fall back to, so without HOME
+# hadolint crashes resolving its config path.
+env = ["HOME=/root"]
