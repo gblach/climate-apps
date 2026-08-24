@@ -1,0 +1,20 @@
+# Typical usage:  climate run go build
+
+[app]
+name = "go"
+description = "Go toolchain"
+license = "BSD-3-Clause"
+
+[image]
+reference = "docker.io/library/golang:latest"
+
+[run]
+entrypoint = "go"
+# Fetch modules from the Go proxy.
+network = "full"
+# The container root is read-only, so the GOPATH and the build cache need sharing.
+# On the host these are the paths a native Go install uses.
+mount = [
+    "~/.cache/go-build/:/root/.cache/go-build",
+    "~/go/:/go",
+]
