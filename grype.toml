@@ -1,0 +1,15 @@
+# Typical usage:  climate run grype dir:.
+
+[app]
+name = "grype"
+description = "Container/filesystem vuln scanner"
+license = "Apache-2.0"
+
+[image]
+reference = "docker.io/anchore/grype:latest"
+
+[run]
+# Needs network to fetch the vulnerability database.
+network = "full"
+# Read-only container root and no HOME, so the database needs sharing; also kept between runs.
+mount = ["~/.cache/grype/:/.cache/grype"]
