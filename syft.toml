@@ -1,0 +1,15 @@
+# Typical usage:  climate run syft dir:.
+
+[app]
+name = "syft"
+description = "SBOM generator"
+license = "Apache-2.0"
+
+[image]
+reference = "docker.io/anchore/syft:latest"
+
+[run]
+# Without this syft checks for a newer release and logs the failed lookup as an error.
+env = ["SYFT_CHECK_FOR_APP_UPDATE=false"]
+# Read-only container root and no HOME, so the cache needs sharing.
+mount = ["~/.cache/syft/:/.cache/syft"]
