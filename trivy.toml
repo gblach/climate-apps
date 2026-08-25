@@ -1,0 +1,15 @@
+# Typical usage:  climate run trivy fs .
+
+[app]
+name = "trivy"
+description = "Vulnerability and misconfig scanner"
+license = "Apache-2.0"
+
+[image]
+reference = "ghcr.io/aquasecurity/trivy:latest"
+
+[run]
+# Needs network to fetch the vulnerability database.
+network = "full"
+# Read-only container root, so the database needs sharing; also kept between runs.
+mount = ["~/.cache/trivy/:/root/.cache/trivy"]
