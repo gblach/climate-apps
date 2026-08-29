@@ -1,0 +1,15 @@
+# Typical usage:  climate run opentofu init / plan / apply
+
+[app]
+name = "opentofu"
+description = "Open-source Terraform fork"
+license = "MPL-2.0"
+
+[image]
+reference = "ghcr.io/opentofu/opentofu:latest"
+
+[run]
+# Reaches provider registries and state backends.
+network = "full"
+# OpenTofu keeps its settings in Terraform's directory; the image runs it as root.
+mount = ["~/.terraform.d/:/root/.terraform.d"]
