@@ -1,0 +1,24 @@
+# Typical usage:  climate run cosign verify <image>
+
+[app]
+name = "cosign"
+description = "Sign and verify artifacts"
+license = "Apache-2.0"
+
+[image]
+reference = "ghcr.io/sigstore/cosign/cosign:latest"
+
+[run]
+# Reaches registries, Fulcio and the transparency log.
+network = "full"
+# The image sets no HOME, so `cosign initialize` writes nowhere and still exits 0.
+# Without COSIGN_PASSWORD the key commands prompt on stdin.
+env = [
+    "COSIGN_PASSWORD",
+    "HOME=/home/nonroot",
+]
+# Read-only container root: `cosign login` writes the first, `cosign initialize` the second.
+mount = [
+    "~/.docker/:/home/nonroot/.docker",
+    "~/.sigstore/:/home/nonroot/.sigstore",
+]
