@@ -1,0 +1,15 @@
+# Typical usage:  climate run terraform init / plan / apply
+
+[app]
+name = "terraform"
+description = "Infrastructure-as-code provisioning"
+license = "BUSL-1.1"
+
+[image]
+reference = "docker.io/hashicorp/terraform:latest"
+
+[run]
+# Reaches provider registries and state backends.
+network = "full"
+# CLI settings and the plugin cache; the image runs the tool as root.
+mount = ["~/.terraform.d/:/root/.terraform.d"]
