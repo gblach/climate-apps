@@ -1,0 +1,28 @@
+# Typical usage:  climate run k9s
+
+[app]
+name = "k9s"
+description = "Terminal Kubernetes UI"
+license = "Apache-2.0"
+
+[image]
+reference = "quay.io/derailed/k9s:latest"
+
+[run]
+network = "full"
+# Without XDG_DATA_HOME k9s puts the per-context settings under /usr/local/share, which the
+# read-only container root rejects on every start.
+env = [
+    "KUBECONFIG=/root/.kube/config",
+    "XDG_DATA_HOME=/root/.local/share",
+]
+# Full-screen TUI over the cluster; it takes no paths from the working directory.
+mount-cwd = false
+# Cluster credentials plus k9s' own settings, per-context state and logs; the image runs
+# the tool as root.
+mount = [
+    "~/.config/k9s/:/root/.config/k9s",
+    "~/.kube/:/root/.kube",
+    "~/.local/share/k9s/:/root/.local/share/k9s",
+    "~/.local/state/k9s/:/root/.local/state/k9s",
+]
