@@ -1,0 +1,17 @@
+# Typical usage:  climate run tailcat --serve=8080
+
+[app]
+name = "tailcat"
+description = "Netcat over Tailscale's data plane"
+license = "BSD-3-Clause"
+
+[image]
+reference = "ghcr.io/tailscale/tailcat:latest"
+
+[run]
+# Reaches the DERP relays and, for `--serve`, the local ports being forwarded.
+network = "full"
+# Without HOME the key commands fail with "neither $XDG_CONFIG_HOME nor $HOME are defined".
+env = ["HOME=/root"]
+# Read-only container root: `tailcat genkey` saves keys here; the image runs the tool as root.
+mount = ["~/.config/tailcat/:/root/.config/tailcat"]
