@@ -1,0 +1,20 @@
+# Typical usage:  climate run helm install / upgrade
+
+[app]
+name = "helm"
+description = "Kubernetes package manager"
+license = "Apache-2.0"
+
+[image]
+reference = "docker.io/alpine/helm:latest"
+
+[run]
+# Reaches the cluster and the chart repositories.
+network = "full"
+# Cluster credentials, the repositories `helm repo add` records and their downloaded
+# indexes; the image runs the tool as root.
+mount = [
+    "~/.cache/helm/:/root/.cache/helm",
+    "~/.config/helm/:/root/.config/helm",
+    "~/.kube/:/root/.kube",
+]
