@@ -3,7 +3,7 @@
 Each `{app_name}.toml` in this directory defines one containerised CLI app. The file stem
 is the app name: `ffmpeg.toml` is run with `climate run ffmpeg`.
 
-A definition has three tables: `[app]`, `[image]`, and `[run]`.
+A definition has four tables: `[app]`, `[image]`, `[run]`, and `[limits]`.
 Only `[app]` and `[image]` are required.
 
 ## `[app]`
@@ -81,6 +81,46 @@ mount = [
 
 A missing path shared read-only is an error instead, as sharing an empty one is never what
 the definition meant.
+
+## `[limits]`
+
+How much of the machine one run may take, enforced by the kernel through cgroup v2. Every key is
+optional, and a key left out is not limited at all, so a definition without this table runs with
+the whole machine available, the way a natively installed tool does.
+
+| Key           | Type   | Default   | Description                                                                          |
+| ------------- | ------ | --------- | ------------------------------------------------------------------------------------ |
+| `memory`      | string | unlimited | Memory ceiling, as a byte count with an optional binary unit.                        |
+| `swap`        | string | unlimited | Swap allowed on top of `memory`; `"0"` keeps the app out of swap entirely.           |
+| `memory-high` | string | unset     | Lower mark at which the app is throttled rather than killed; must be below `memory`. |
+| `cpu`         | number | unlimited | CPU time in cores' worth per second, so `0.5` is half a core.                        |
+| `cpu-shares`  | number | `1024`    | Share of a contended CPU, relative to other programs.                                |
+| `pids`        | number | unlimited | Processes and threads the app may have at once.                                      |
+
+Sizes are a byte count with an optional binary unit - `K`, `M`, `G` or `T`, where `M` means
+1024 * 1024. `MB` and `MiB` spell the same unit; no unit at all means plain bytes.
+
+```toml
+[limits]
+memory = "2G"
+swap = "0"
+cpu = 1.5
+pids = 512
+```
+
+`memory` on its own is not the ceiling it looks like: an app that grows past it is pushed into
+swap rather than killed. `swap` closes that - it says how much swap the app gets on top of
+`memory`, and needs a `memory` limit to sit on top of.
+
+`memory-high` throttles instead of killing, but reclaim needs somewhere to put the pages it frees,
+so pairing it with `swap = "0"` leaves it little to do when the app's memory is mostly files it
+wrote under `/tmp`; such an app is killed at `memory` anyway.
+
+`cpu` caps total CPU time, not how many cores the app spreads over. `cpu-shares` only matters
+while something else wants the CPU, and youki rescales the number, so `512` does not mean half.
+
+Containers are limited through the systemd user session, which delegates only the `cpu`, `memory`
+and `pids` controllers, so there are no keys for CPU pinning or disk I/O.
 
 ## Example
 
