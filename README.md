@@ -31,14 +31,15 @@ meaning the image is built locally or provided out of band.
 How the container is launched. Every key is optional; by default the current working
 directory is mounted in so the tool behaves like a native one.
 
-| Key           | Type           | Default       | Description                                                                                                      |
-| ------------- | -------------- | ------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `entrypoint`  | string or list | image default | Override the image entrypoint.                                                                                   |
-| `args`        | list of string | `[]`          | Default arguments, placed before user-supplied arguments.                                                        |
-| `env`         | list of string | `[]`          | Environment entries: `"NAME"` passes a host variable through, `"NAME=VALUE"` sets it explicitly.                 |
-| `mount-cwd`   | bool           | `true`        | Bind-mount the current working directory at the same path; `false` mounts nothing.                               |
-| `mount`       | list of string | `[]`          | Extra host paths to share, on top of the working directory; see below.                                           |
-| `network`     | enum           | `"none"`      | Network access: `"full"` (host network), `"none"` (isolated, no connectivity), or `"localhost"` (loopback only). |
+| Key            | Type           | Default       | Description                                                                                                      |
+| -------------- | -------------- | ------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `entrypoint`   | string or list | image default | Override the image entrypoint.                                                                                   |
+| `args`         | list of string | `[]`          | Default arguments, placed before user-supplied arguments.                                                        |
+| `env`          | list of string | `[]`          | Environment entries: `"NAME"` passes a host variable through, `"NAME=VALUE"` sets it explicitly.                 |
+| `mount-cwd`    | bool           | `true`        | Bind-mount the current working directory at the same path; `false` mounts nothing.                               |
+| `mount`        | list of string | `[]`          | Extra host paths to share, on top of the working directory; see below.                                           |
+| `network`      | enum           | `"none"`      | Network access: `"full"` (host network), `"none"` (isolated, no connectivity), or `"localhost"` (loopback only). |
+| `capabilities` | list of string | `[]`          | Linux capabilities the app keeps, named without the `CAP_` prefix; none by default.                              |
 
 `entrypoint` accepts a single string or a list of strings: a string overrides the entrypoint
 verbatim (run directly), while a list is encoded as a JSON array,
@@ -81,6 +82,79 @@ mount = [
 
 A missing path shared read-only is an error instead, as sharing an empty one is never what
 the definition meant.
+
+`capabilities` hands back a Linux capability the container is otherwise stripped of. An OCI runtime
+grants `AUDIT_WRITE`, `KILL` and `NET_BIND_SERVICE` by default; CLImate drops those too, so an app
+starts with none:
+
+```toml
+[run]
+network = "localhost"
+capabilities = ["NET_BIND_SERVICE"]   # bind ports below 1024
+```
+
+Names drop the kernel's `CAP_` prefix and ignore case, so `NET_BIND_SERVICE` and
+`net_bind_service` are the same. The full list:
+
+| Name                 | Description                                                                     |
+| -------------------- | ------------------------------------------------------------------------------- |
+| `AUDIT_CONTROL`      | Change kernel audit rules and read the audit status.                            |
+| `AUDIT_READ`         | Read the kernel audit log.                                                      |
+| `AUDIT_WRITE`        | Write records to the kernel audit log.                                          |
+| `BLOCK_SUSPEND`      | Stop the system from suspending.                                                |
+| `BPF`                | Load BPF programs and create BPF maps.                                          |
+| `CHECKPOINT_RESTORE` | Checkpoint and restore processes, and start one with a chosen PID.              |
+| `CHOWN`              | Change a file's owner or group.                                                 |
+| `DAC_OVERRIDE`       | Ignore file read, write and execute permission checks.                          |
+| `DAC_READ_SEARCH`    | Ignore read permission on files and search permission on directories.           |
+| `FOWNER`             | Act as a file's owner for operations that normally require it.                  |
+| `FSETID`             | Keep the set-user-ID and set-group-ID bits when a file is modified.             |
+| `IPC_LOCK`           | Lock memory so it is never swapped out.                                         |
+| `IPC_OWNER`          | Skip permission checks on shared memory, semaphores and message queues.         |
+| `KILL`               | Signal a process owned by another user.                                         |
+| `LEASE`              | Take out leases on files.                                                       |
+| `LINUX_IMMUTABLE`    | Set the immutable and append-only file attributes.                              |
+| `MAC_ADMIN`          | Change the policy of a mandatory access control system such as SMACK.           |
+| `MAC_OVERRIDE`       | Ignore mandatory access control decisions.                                      |
+| `MKNOD`              | Create device files.                                                            |
+| `NET_ADMIN`          | Configure the network: interfaces, addresses, routes and firewall rules.        |
+| `NET_BIND_SERVICE`   | Bind a socket to a port below 1024.                                             |
+| `NET_BROADCAST`      | Broadcast and listen to multicast; unused by the kernel today.                  |
+| `NET_RAW`            | Open raw and packet sockets, the way `ping` and `tcpdump` do.                   |
+| `PERFMON`            | Use the kernel's performance monitoring and profiling interfaces.               |
+| `SETFCAP`            | Set capabilities on a file.                                                     |
+| `SETGID`             | Change the process group ID, and forge group IDs passed over a socket.          |
+| `SETPCAP`            | Move capabilities between the process's own sets.                               |
+| `SETUID`             | Change the process user ID, and forge user IDs passed over a socket.            |
+| `SYS_ADMIN`          | Administrative operations of every kind: mounting, namespaces, quotas and more. |
+| `SYS_BOOT`           | Reboot the machine, or load a kernel to switch to.                              |
+| `SYS_CHROOT`         | Call `chroot`, and move between mount namespaces.                               |
+| `SYSLOG`             | Read and control the kernel message buffer.                                     |
+| `SYS_MODULE`         | Load and unload kernel modules.                                                 |
+| `SYS_NICE`           | Raise scheduling priority, and change scheduling policy.                        |
+| `SYS_PACCT`          | Switch process accounting on and off.                                           |
+| `SYS_PTRACE`         | Trace and inspect any process with `ptrace`.                                    |
+| `SYS_RAWIO`          | Reach I/O ports and block devices directly.                                     |
+| `SYS_RESOURCE`       | Go past kernel-enforced resource limits, such as disk quotas.                   |
+| `SYS_TIME`           | Set the system and hardware clocks.                                             |
+| `SYS_TTY_CONFIG`     | Configure terminals and hang up virtual ones.                                   |
+| `WAKE_ALARM`         | Set timers that wake the system from suspend.                                   |
+
+Most of them do nothing here. A capability is checked against the namespace that owns whatever it
+acts on, and a container owns less than it looks.
+
+Its own processes and mounts, always - every run gets a PID and a mount namespace of its own.
+Machine-wide state, never: `SYS_TIME`, `SYS_MODULE`, `SYS_BOOT` and `AUDIT_WRITE` are checked
+against the host, where the app holds nothing.
+
+The network depends on `network`. With `"none"` and `"localhost"` the container gets a network
+namespace of its own, so `NET_RAW` and `NET_BIND_SERVICE` work inside it. With `"full"` it shares
+the host's, which the host owns, and they do nothing at all.
+
+A fresh network namespace also switches off unprivileged ICMP, so an app that pings needs `NET_RAW`
+with `"localhost"` and nothing with `"full"`.
+
+One user ID is mapped, `0`, so `CHOWN`, `SETUID` and `SETGID` have no second ID to switch to.
 
 ## `[limits]`
 
