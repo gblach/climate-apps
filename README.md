@@ -31,15 +31,17 @@ meaning the image is built locally or provided out of band.
 How the container is launched. Every key is optional; by default the current working
 directory is mounted in so the tool behaves like a native one.
 
-| Key            | Type           | Default       | Description                                                                                                      |
-| -------------- | -------------- | ------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `entrypoint`   | string or list | image default | Override the image entrypoint.                                                                                   |
-| `args`         | list of string | `[]`          | Default arguments, placed before user-supplied arguments.                                                        |
-| `env`          | list of string | `[]`          | Environment entries: `"NAME"` passes a host variable through, `"NAME=VALUE"` sets it explicitly.                 |
-| `mount-cwd`    | bool           | `true`        | Bind-mount the current working directory at the same path; `false` mounts nothing.                               |
-| `mount`        | list of string | `[]`          | Extra host paths to share, on top of the working directory; see below.                                           |
-| `network`      | enum           | `"none"`      | Network access: `"full"` (host network), `"none"` (isolated, no connectivity), or `"localhost"` (loopback only). |
-| `capabilities` | list of string | `[]`          | Linux capabilities the app keeps, named without the `CAP_` prefix; none by default.                              |
+| Key             | Type           | Default       | Description                                                                                                      |
+| --------------- | -------------- | ------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `entrypoint`    | string or list | image default | Override the image entrypoint.                                                                                   |
+| `args`          | list of string | `[]`          | Default arguments, placed before user-supplied arguments.                                                        |
+| `env`           | list of string | `[]`          | Environment entries: `"NAME"` passes a host variable through, `"NAME=VALUE"` sets it explicitly.                 |
+| `mount-cwd`     | bool           | `true`        | Bind-mount the current working directory at the same path; `false` mounts nothing.                               |
+| `mount`         | list of string | `[]`          | Extra host paths to share, on top of the working directory; see below.                                           |
+| `network`       | enum           | `"none"`      | Network access: `"full"` (host network), `"none"` (isolated, no connectivity), or `"localhost"` (loopback only). |
+| `capabilities`  | list of string | `[]`          | Linux capabilities the app keeps, named without the `CAP_` prefix; none by default.                              |
+| `seccomp-allow` | list of string | `[]`          | System calls to allow on top of the built-in seccomp profile; see below.                                         |
+| `seccomp-deny`  | list of string | `[]`          | System calls to refuse although the profile allows them.                                                         |
 
 `entrypoint` accepts a single string or a list of strings: a string overrides the entrypoint
 verbatim (run directly), while a list is encoded as a JSON array,
@@ -155,6 +157,49 @@ A fresh network namespace also switches off unprivileged ICMP, so an app that pi
 with `"localhost"` and nothing with `"full"`.
 
 One user ID is mapped, `0`, so `CHOWN`, `SETUID` and `SETGID` have no second ID to switch to.
+
+Every container also runs behind a seccomp filter, so a capability is not the only thing an app can
+be short of. It allows the system calls docker and podman allow by default and refuses every other
+one with `Operation not permitted`, including calls only newer kernels have. Three differences:
+
+- `clone` and `unshare` are refused when they ask for a new user namespace: a process holds every
+  capability inside one it creates, so an app could hand back the ones `capabilities` leaves out.
+- `clone3` answers "function not implemented", which makes a C library fall back to plain `clone`.
+  Its arguments sit in memory, where a filter cannot read them, so it cannot be checked directly.
+- `personality` is limited to the execution domains that leave address space randomization on, and
+  `socket` refuses the address family that talks to the host of a virtual machine.
+
+Some calls are refused unless the app asks for the capability they belong to:
+
+| Capability        | System calls it unblocks                                                                    |
+| ----------------- | ------------------------------------------------------------------------------------------- |
+| `BPF`             | `bpf`                                                                                       |
+| `DAC_READ_SEARCH` | `open_by_handle_at`                                                                         |
+| `PERFMON`         | `perf_event_open`                                                                           |
+| `SYS_ADMIN`       | `bpf`, `lookup_dcookie`, `quotactl`, `quotactl_fd`, `setdomainname`, `sethostname`, `setns` |
+| `SYS_CHROOT`      | `chroot`                                                                                    |
+| `SYS_MODULE`      | `delete_module`, `finit_module`, `init_module`, `query_module`                              |
+| `SYS_PACCT`       | `acct`                                                                                      |
+| `SYS_PTRACE`      | `kcmp`, `process_madvise`                                                                   |
+| `SYS_RAWIO`       | `ioperm`, `iopl`                                                                            |
+| `SYS_TIME`        | `clock_settime`, `clock_settime64`, `settimeofday`, `stime`                                 |
+| `SYS_TTY_CONFIG`  | `vhangup`                                                                                   |
+
+`seccomp-allow` and `seccomp-deny` adjust the filter for one app: the first names calls to allow on
+top of the profile, for an app the profile stops from working; the second names calls to refuse
+although the profile allows them.
+
+```toml
+[run]
+seccomp-allow = ["perf_event_open"]   # allowed on top of the profile
+seccomp-deny = ["ptrace"]             # refused although the profile allows it
+```
+
+Names are the kernel's own, with no prefix, and unlike capability names they are case sensitive.
+A name that is not a system call is an error, so a misspelling is reported instead of quietly
+doing nothing. Naming one of the partly allowed calls above - `clone`, `clone3`, `unshare`,
+`socket` or `personality` - in either key replaces the rule the profile has for it, so
+`seccomp-allow = ["unshare"]` really does give an app the user namespace route back.
 
 ## `[limits]`
 
