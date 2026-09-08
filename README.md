@@ -1,7 +1,9 @@
 # App definition format
 
-Each `{app_name}.toml` in this directory defines one containerised CLI app. The file stem
-is the app name: `ffmpeg.toml` is run with `climate run ffmpeg`.
+Each `{app_name}.toml` in this repository defines one containerised CLI app. The file stem
+is the app name: `ffmpeg.toml` is run with `climate run ffmpeg`. Definitions are grouped one level
+down, in a directory named after the first character of the app name, so `ffmpeg.toml` sits
+in `f/`.
 
 A definition has four tables: `[app]`, `[image]`, `[run]`, and `[limits]`.
 Only `[app]` and `[image]` are required.
