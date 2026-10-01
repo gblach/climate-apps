@@ -1,0 +1,15 @@
+# Typical usage:  climate run debos recipe.yaml
+
+[app]
+name = "debos"
+description = "Debian OS image builder"
+license = "Apache-2.0"
+
+[image]
+reference = "ghcr.io/go-debos/debos:latest"
+
+[run]
+# Fetches packages from Debian mirrors.
+network = "full"
+# fakemachine boots its build VM with KVM; without it debos falls back to slow emulation.
+mount = ["/dev/kvm"]
