@@ -1,0 +1,18 @@
+# Typical usage:  climate run irssi
+
+[app]
+name = "irssi"
+description = "Terminal IRC client"
+license = "GPL-2.0-or-later"
+
+[image]
+reference = "docker.io/library/irssi:latest"
+
+[run]
+entrypoint = "irssi"
+network = "full"
+env = ["TERM"]
+# Full-screen chat client; it takes no paths from the working directory.
+mount-cwd = false
+# Config, scripts and logs; the image sets HOME to /home/user.
+mount = ["~/.irssi/:/home/user/.irssi"]
