@@ -1,0 +1,9 @@
+# Typical usage:  climate run terraform-docs markdown table .
+
+[app]
+name = "terraform-docs"
+description = "Generate documentation from Terraform modules"
+license = "MIT"
+
+[image]
+reference = "quay.io/terraform-docs/terraform-docs:latest"
