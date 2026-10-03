@@ -1,0 +1,14 @@
+# Typical usage:  climate run kubectl get pods
+
+[app]
+name = "kubectl"
+description = "Kubernetes command-line tool"
+license = "Apache-2.0"
+
+[image]
+reference = "docker.io/bitnami/kubectl:latest"
+
+[run]
+network = "full"
+# Cluster credentials and the discovery cache; the image sets HOME to /.
+mount = ["~/.kube/:/.kube"]
