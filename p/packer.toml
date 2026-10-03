@@ -1,0 +1,15 @@
+# Typical usage:  climate run packer init . / build .
+
+[app]
+name = "packer"
+description = "Machine image builder"
+license = "BUSL-1.1"
+
+[image]
+reference = "docker.io/hashicorp/packer:latest"
+
+[run]
+# Reaches plugin releases and the cloud APIs it builds on.
+network = "full"
+# Plugins `packer init` installs; the image runs the tool as root.
+mount = ["~/.config/packer/:/root/.config/packer"]
