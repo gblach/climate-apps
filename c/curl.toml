@@ -1,0 +1,13 @@
+# Typical usage:  climate run curl -fsSL https://example.com
+
+[app]
+name = "curl"
+description = "Transfer data with URLs"
+license = "curl"
+
+[image]
+reference = "docker.io/curlimages/curl:latest"
+
+[run]
+entrypoint = "curl"
+network = "full"
