@@ -1,0 +1,13 @@
+# Typical usage:  climate run ab -n 1000 -c 10 http://localhost:8080/
+
+[app]
+name = "ab"
+description = "Apache HTTP server benchmarking tool"
+license = "Apache-2.0"
+
+[image]
+reference = "docker.io/library/httpd:latest"
+
+[run]
+entrypoint = "/usr/local/apache2/bin/ab"
+network = "full"
