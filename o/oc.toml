@@ -1,0 +1,15 @@
+# Typical usage:  climate run oc get pods
+
+[app]
+name = "oc"
+description = "OpenShift command-line tool"
+license = "Apache-2.0"
+
+[image]
+reference = "quay.io/openshift/origin-cli:latest"
+
+[run]
+entrypoint = "oc"
+network = "full"
+# Cluster credentials; the image runs the tool as root.
+mount = ["~/.kube/:/root/.kube"]
