@@ -33,17 +33,17 @@ meaning the image is built locally or provided out of band.
 How the container is launched. Every key is optional; by default the current working
 directory is mounted in so the tool behaves like a native one.
 
-| Key             | Type           | Default       | Description                                                                                                      |
-| --------------- | -------------- | ------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `entrypoint`    | string or list | image default | Override the image entrypoint.                                                                                   |
-| `args`          | list of string | `[]`          | Default arguments, placed before user-supplied arguments.                                                        |
-| `env`           | list of string | `[]`          | Environment entries: `"NAME"` passes a host variable through, `"NAME=VALUE"` sets it explicitly.                 |
-| `mount-cwd`     | bool           | `true`        | Bind-mount the current working directory at the same path; `false` mounts nothing.                               |
-| `mount`         | list of string | `[]`          | Extra host paths to share, on top of the working directory; see below.                                           |
-| `network`       | enum           | `"none"`      | Network access: `"full"` (host network), `"none"` (isolated, no connectivity), or `"localhost"` (loopback only). |
-| `capabilities`  | list of string | `[]`          | Linux capabilities the app keeps, named without the `CAP_` prefix; none by default.                              |
-| `seccomp-allow` | list of string | `[]`          | System calls to allow on top of the built-in seccomp profile; see below.                                         |
-| `seccomp-deny`  | list of string | `[]`          | System calls to refuse although the profile allows them.                                                         |
+| Key             | Type           | Default       | Description                                                                                                   |
+| --------------- | -------------- | ------------- | ------------------------------------------------------------------------------------------------------------- |
+| `entrypoint`    | string or list | image default | Override the image entrypoint.                                                                                |
+| `args`          | list of string | `[]`          | Default arguments, placed before user-supplied arguments.                                                     |
+| `env`           | list of string | `[]`          | Environment entries: `"NAME"` passes a host variable through, `"NAME=VALUE"` sets it explicitly.              |
+| `mount-cwd`     | bool           | `true`        | Bind-mount the current working directory at the same path; `false` mounts nothing.                            |
+| `mount`         | list of string | `[]`          | Extra host paths to share, on top of the working directory; see below.                                        |
+| `network`       | enum           | `"none"`      | Network access: `"none"`, `"localhost"` (loopback), `"localnet"` (loopback + LAN) or `"full"` (host network). |
+| `capabilities`  | list of string | `[]`          | Linux capabilities the app keeps, named without the `CAP_` prefix; none by default.                           |
+| `seccomp-allow` | list of string | `[]`          | System calls to allow on top of the built-in seccomp profile; see below.                                      |
+| `seccomp-deny`  | list of string | `[]`          | System calls to refuse although the profile allows them.                                                      |
 
 `entrypoint` accepts a single string or a list of strings: a string overrides the entrypoint
 verbatim (run directly), while a list is encoded as a JSON array,
@@ -151,12 +151,13 @@ Its own processes and mounts, always - every run gets a PID and a mount namespac
 Machine-wide state, never: `SYS_TIME`, `SYS_MODULE`, `SYS_BOOT` and `AUDIT_WRITE` are checked
 against the host, where the app holds nothing.
 
-The network depends on `network`. With `"none"` and `"localhost"` the container gets a network
-namespace of its own, so `NET_RAW` and `NET_BIND_SERVICE` work inside it. With `"full"` it shares
-the host's, which the host owns, and they do nothing at all.
+The network depends on `network`. With `"none"`, `"localhost"` and `"localnet"` the container gets
+a network namespace of its own, so `NET_RAW` and `NET_BIND_SERVICE` work inside it. With `"full"` it
+shares the host's, which the host owns, and they do nothing at all.
 
 A fresh network namespace also switches off unprivileged ICMP, so an app that pings needs `NET_RAW`
-with `"localhost"` and nothing with `"full"`.
+with `"localhost"` and nothing with `"full"`. With `"localnet"` only TCP and UDP are carried to the
+local networks, so a ping never leaves the container.
 
 One user ID is mapped, `0`, so `CHOWN`, `SETUID` and `SETGID` have no second ID to switch to.
 
