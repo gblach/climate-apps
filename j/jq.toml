@@ -1,0 +1,9 @@
+# Typical usage:  climate run jq '.items[].name' data.json
+
+[app]
+name = "jq"
+description = "Command-line JSON processor"
+license = "MIT"
+
+[image]
+reference = "ghcr.io/jqlang/jq:latest"
