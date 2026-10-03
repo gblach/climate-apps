@@ -1,0 +1,13 @@
+# Typical usage:  climate run http GET httpbin.org/get
+#                 climate run http POST httpbin.org/post name=value
+
+[app]
+name = "http"
+description = "User-friendly HTTP client (HTTPie)"
+license = "BSD-3-Clause"
+
+[image]
+reference = "docker.io/alpine/httpie:latest"
+
+[run]
+network = "full"
