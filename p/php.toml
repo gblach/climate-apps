@@ -1,0 +1,12 @@
+# Typical usage:  climate run php script.php
+
+[app]
+name = "php"
+description = "PHP interpreter"
+license = "PHP-3.01"
+
+[image]
+reference = "docker.io/library/php:cli"
+
+[run]
+entrypoint = "php"
