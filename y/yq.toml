@@ -1,0 +1,9 @@
+# Typical usage:  climate run yq '.spec.replicas' deployment.yaml
+
+[app]
+name = "yq"
+description = "Command-line YAML, JSON and XML processor"
+license = "MIT"
+
+[image]
+reference = "docker.io/mikefarah/yq:latest"
