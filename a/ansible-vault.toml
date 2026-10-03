@@ -1,0 +1,14 @@
+# Typical usage:  climate run ansible-vault encrypt secrets.yml
+
+[app]
+name = "ansible-vault"
+description = "Encrypt and decrypt Ansible data files"
+license = "GPL-3.0-or-later"
+
+[image]
+reference = "docker.io/alpine/ansible:latest"
+
+[run]
+entrypoint = "ansible-vault"
+# Ansible creates ~/.ansible on every start, which the read-only container root rejects.
+env = ["ANSIBLE_HOME=/tmp/ansible"]

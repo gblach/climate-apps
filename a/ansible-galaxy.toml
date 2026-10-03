@@ -1,0 +1,17 @@
+# Typical usage:  climate run ansible-galaxy collection install -r requirements.yml
+
+[app]
+name = "ansible-galaxy"
+description = "Install Ansible collections and roles"
+license = "GPL-3.0-or-later"
+
+[image]
+reference = "docker.io/alpine/ansible:latest"
+
+[run]
+entrypoint = "ansible-galaxy"
+# Fetches from Ansible Galaxy.
+network = "full"
+# Where collections and roles are installed, so ansible and ansible-playbook find them; the image
+# runs the tool as root.
+mount = ["~/.ansible/:/root/.ansible"]

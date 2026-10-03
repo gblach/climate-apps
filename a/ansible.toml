@@ -1,0 +1,20 @@
+# Typical usage:  climate run ansible all -i inventory -m ping
+
+[app]
+name = "ansible"
+description = "IT automation and configuration management"
+license = "GPL-3.0-or-later"
+
+[image]
+reference = "docker.io/alpine/ansible:latest"
+
+[run]
+entrypoint = "ansible"
+# Reaches the managed hosts over SSH.
+network = "full"
+# Installed collections and roles, plus the SSH keys and known hosts; the image runs the tool
+# as root.
+mount = [
+    "~/.ansible/:/root/.ansible",
+    "~/.ssh/:/root/.ssh",
+]
