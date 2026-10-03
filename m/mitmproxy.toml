@@ -1,0 +1,18 @@
+# Typical usage:  climate run mitmproxy --listen-port 8080
+
+[app]
+name = "mitmproxy"
+description = "Interactive intercepting HTTP proxy"
+license = "MIT"
+
+[image]
+reference = "docker.io/mitmproxy/mitmproxy:latest"
+
+[run]
+# The image entrypoint switches to an unprivileged user, which needs a second user ID that the
+# container does not have.
+entrypoint = "mitmproxy"
+network = "full"
+env = ["TERM"]
+# The generated CA certificate, which clients are told to trust; the image runs the tool as root.
+mount = ["~/.mitmproxy/:/root/.mitmproxy"]
