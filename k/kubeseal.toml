@@ -1,0 +1,17 @@
+# Typical usage:  climate run kubeseal -f secret.yaml -w sealed-secret.yaml
+
+[app]
+name = "kubeseal"
+description = "Encrypt Kubernetes Secrets into SealedSecrets"
+license = "Apache-2.0"
+
+[image]
+reference = "docker.io/bitnami/sealed-secrets-kubeseal:latest"
+
+[run]
+# Fetches the sealing certificate from the cluster.
+network = "full"
+# The image sets no HOME, so kubeseal would not look under /root on its own.
+env = ["KUBECONFIG=/root/.kube/config"]
+# Cluster credentials.
+mount = ["~/.kube/:/root/.kube"]
