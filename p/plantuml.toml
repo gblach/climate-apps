@@ -1,0 +1,9 @@
+# Typical usage:  climate run plantuml -tsvg diagram.puml
+
+[app]
+name = "plantuml"
+description = "UML diagrams from plain text"
+license = "GPL-3.0-or-later"
+
+[image]
+reference = "docker.io/plantuml/plantuml:latest"
