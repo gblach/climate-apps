@@ -1,0 +1,12 @@
+# Typical usage:  climate run node script.js
+
+[app]
+name = "node"
+description = "JavaScript runtime"
+license = "MIT"
+
+[image]
+reference = "docker.io/library/node:latest"
+
+[run]
+entrypoint = "node"

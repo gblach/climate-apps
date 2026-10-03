@@ -1,0 +1,17 @@
+# Typical usage:  climate run npm install / run build
+
+[app]
+name = "npm"
+description = "Node.js package manager"
+license = "Artistic-2.0"
+
+[image]
+reference = "docker.io/library/node:latest"
+
+[run]
+entrypoint = "npm"
+# Fetch packages from the registry.
+network = "full"
+# The container root is read-only, so the package cache needs sharing; the image runs the tool
+# as root.
+mount = ["~/.npm/:/root/.npm"]
