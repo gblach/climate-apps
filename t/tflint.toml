@@ -1,0 +1,15 @@
+# Typical usage:  climate run tflint --init / tflint
+
+[app]
+name = "tflint"
+description = "Terraform linter"
+license = "MPL-2.0"
+
+[image]
+reference = "ghcr.io/terraform-linters/tflint:latest"
+
+[run]
+# `tflint --init` downloads rule plugins.
+network = "full"
+# Installed plugins; the image runs the tool as root.
+mount = ["~/.tflint.d/:/root/.tflint.d"]
