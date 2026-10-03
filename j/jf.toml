@@ -1,0 +1,15 @@
+# Typical usage:  climate run jf rt ping
+
+[app]
+name = "jf"
+description = "JFrog CLI"
+license = "Apache-2.0"
+
+[image]
+reference = "releases-docker.jfrog.io/jfrog/jfrog-cli-v2-jf:latest"
+
+[run]
+entrypoint = "jf"
+network = "full"
+# Server configurations and credentials; the image runs the tool as root.
+mount = ["~/.jfrog/:/root/.jfrog"]
