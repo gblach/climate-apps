@@ -1,0 +1,12 @@
+# Typical usage:  climate run socat TCP-LISTEN:8080,fork TCP:example.com:80
+
+[app]
+name = "socat"
+description = "Multipurpose relay between sockets, files and pipes"
+license = "GPL-2.0-only"
+
+[image]
+reference = "docker.io/alpine/socat:latest"
+
+[run]
+network = "full"
