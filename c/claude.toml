@@ -1,0 +1,32 @@
+# Typical usage:  climate run claude
+#                 climate run claude -p "explain this repository"
+
+[app]
+name = "claude"
+description = "Agentic coding tool from Anthropic"
+license = "LicenseRef-Proprietary"
+
+[image]
+# The agent runs commands in the project, and this image has git, curl, python and compilers.
+reference = "docker.io/library/node:lts"
+# The installer puts the binary under the home directory, off the PATH, and leaves config there
+# that the shares below would hide anyway.
+install = """
+curl -fsSL https://claude.ai/install.sh | bash
+install -m 755 "$(readlink -f /root/.local/bin/claude)" /usr/local/bin/claude
+rm -rf /root/.local /root/.claude /root/.claude.json
+"""
+
+[run]
+entrypoint = "claude"
+network = "full"
+# The container root is read-only, so updates come from `climate pull` instead. Keeping
+# .claude.json inside the config directory lets one share hold all the state.
+env = [
+    "ANTHROPIC_API_KEY",
+    "CLAUDE_CONFIG_DIR=/root/.claude",
+    "DISABLE_AUTOUPDATER=1",
+    "TERM",
+]
+# Credentials, settings, sessions and history; the image runs the tool as root.
+mount = ["~/.claude/:/root/.claude"]
