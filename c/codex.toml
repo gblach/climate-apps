@@ -1,0 +1,25 @@
+# Typical usage:  climate run codex
+#                 climate run codex exec "explain this repository"
+
+[app]
+name = "codex"
+description = "Coding agent from OpenAI"
+license = "Apache-2.0"
+
+[image]
+# The agent runs commands in the project, and this image has git, curl, python and compilers.
+reference = "docker.io/library/node:lts"
+install = """
+npm install -g @openai/codex
+npm cache clean --force
+"""
+
+[run]
+entrypoint = "codex"
+# Codex sandboxes its commands with bubblewrap, which needs the user namespaces the container
+# refuses. The container is the sandbox instead.
+args = ["--config", "sandbox_mode=\"danger-full-access\""]
+network = "full"
+env = ["OPENAI_API_KEY", "TERM"]
+# Credentials, config, sessions and history; the image runs the tool as root.
+mount = ["~/.codex/:/root/.codex"]
