@@ -24,9 +24,26 @@ The image and how to fetch it.
 | ----------- | ------ | -------- | ---------------------------------------------------------------------------- |
 | `reference` | string | required | Fully qualified image reference, e.g. `docker.io/linuxserver/ffmpeg:latest`. |
 | `pull`      | bool   | `true`   | Whether the image may be pulled from a registry.                             |
+| `install`   | string | unset    | Shell script that builds the app's image on top of `reference`.              |
 
 `pull = true` (the default) pulls newer images when available; `pull = false` never pulls,
 meaning the image is built locally or provided out of band.
+
+`install` is for a tool no registry has an image of. `reference` then names the image to start
+from, and the script runs on it once, with `/bin/sh -e`, as root, with the host network:
+
+```toml
+[image]
+reference = "docker.io/library/node:lts"
+install = """
+npm install -g @google/gemini-cli
+npm cache clean --force
+"""
+```
+
+What the script writes becomes the app's own image; what it writes under `/tmp` is dropped.
+`climate pull <app>` runs the script again to pick up a new release of the tool. `climate pull -u`
+leaves built apps alone unless `-r`/`--rebuild` is added. A failed script keeps the previous image.
 
 ## `[run]`
 
