@@ -1,0 +1,36 @@
+# Typical usage:  climate run goose session
+#                 climate run goose run -t "explain this repository"
+
+[app]
+name = "goose"
+description = "Extensible AI agent from Block"
+license = "Apache-2.0"
+
+[image]
+# The agent runs commands in the project, and this image has git, curl, python and compilers.
+# It also has the bzip2 the installer needs, and the npx that many extensions start with.
+reference = "docker.io/library/node:lts"
+install = """
+url=https://github.com/aaif-goose/goose/releases/download/stable/download_cli.sh
+curl -fsSL "$url" | CONFIGURE=false GOOSE_BIN_DIR=/usr/local/bin bash
+"""
+
+[run]
+entrypoint = "goose"
+network = "full"
+# The container has no keyring to reach, so API keys go to ~/.config/goose/secrets.yaml.
+env = [
+    "ANTHROPIC_API_KEY",
+    "GOOGLE_API_KEY",
+    "GOOSE_DISABLE_KEYRING=1",
+    "GOOSE_MODEL",
+    "GOOSE_PROVIDER",
+    "OPENAI_API_KEY",
+    "TERM",
+]
+# Config and secrets, sessions, and logs; the image runs the tool as root.
+mount = [
+    "~/.config/goose/:/root/.config/goose",
+    "~/.local/share/goose/:/root/.local/share/goose",
+    "~/.local/state/goose/:/root/.local/state/goose",
+]
