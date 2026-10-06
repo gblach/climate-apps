@@ -1,0 +1,29 @@
+# Typical usage:  climate run gemini
+#                 climate run gemini -p "explain this repository"
+
+[app]
+name = "gemini"
+description = "Coding agent from Google"
+license = "Apache-2.0"
+
+[image]
+# The agent runs commands in the project, and this image has git, curl, python and compilers.
+reference = "docker.io/library/node:lts"
+install = """
+npm install -g @google/gemini-cli
+npm cache clean --force
+"""
+
+[run]
+entrypoint = "gemini"
+network = "full"
+env = [
+    "GEMINI_API_KEY",
+    "GOOGLE_API_KEY",
+    "GOOGLE_CLOUD_LOCATION",
+    "GOOGLE_CLOUD_PROJECT",
+    "GOOGLE_GENAI_USE_VERTEXAI",
+    "TERM",
+]
+# Credentials, settings and history; the image runs the tool as root.
+mount = ["~/.gemini/:/root/.gemini"]
